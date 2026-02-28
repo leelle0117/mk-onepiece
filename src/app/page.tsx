@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import WaveBackground from "@/components/WaveBackground";
@@ -31,6 +32,14 @@ const floatingPositions: {
 ];
 
 export default function Home() {
+  const [visitCount, setVisitCount] = useState(0);
+
+  useEffect(() => {
+    const count = Number(localStorage.getItem("visitCount") || 0) + 1;
+    localStorage.setItem("visitCount", String(count));
+    setVisitCount(count);
+  }, []);
+
   return (
     <main className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
       <WaveBackground />
@@ -157,9 +166,21 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.3 }}
         >
-          소요 시간: 약 2분
+          소요 시간: 약 1분
         </motion.p>
       </motion.div>
+
+      {/* 방문자 카운터 */}
+      {visitCount > 0 && (
+        <motion.p
+          className="absolute bottom-3 right-4 text-[10px] text-slate-600"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2 }}
+        >
+          방문자 수: {visitCount.toLocaleString()}
+        </motion.p>
+      )}
     </main>
   );
 }
